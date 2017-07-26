@@ -1,0 +1,16 @@
+grant {
+permission java.net.SocketPermission "192.168.1.2:*", "connect,resolve";
+permission java.net.SocketPermission "192.168.1.2:*", "accept";
+permission java.net.SocketPermission "192.168.1.2:*", "connect,resolve";
+permission java.net.SocketPermission "192.168.1.2:*", "accept";
+
+permission java.net.SocketPermission "127.0.1.1:*", "connect,resolve";
+permission java.net.SocketPermission "127.0.1.1:*", "accept";
+permission java.net.SocketPermission "127.0.1.2:*", "connect,resolve";
+permission java.net.SocketPermission "127.0.1.2:*", "accept";
+
+permission java.net.SocketPermission "127.0.0.1:*", "connect,resolve";
+permission java.net.SocketPermission "127.0.0.1:*", "accept";
+permission java.net.SocketPermission "127.0.0.2:*", "connect,resolve";
+permission java.net.SocketPermission "127.0.0.2:*", "accept";
+};
