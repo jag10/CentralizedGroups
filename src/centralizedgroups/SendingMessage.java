@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Jeff
+ * @author Jeferson Arboleda
  */
 public class SendingMessage extends Thread {
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Jeff
+ * @author Jeferson Arboleda
  */
 public class GroupMember implements Serializable{
 

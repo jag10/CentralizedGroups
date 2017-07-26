@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 /**
  *
- * @author Jeff
+ * @author Jeferson Arboleda
  */
 public interface ClientInterface extends Remote{
     

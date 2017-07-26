@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
- * @author Jeff
+ * @author Jeferson Arboleda
  */
 //http://docs.oracle.com/javase/tutorial/rmi/server.html
 public class GroupServer extends UnicastRemoteObject implements GroupServerInterface {
