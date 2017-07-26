@@ -8,10 +8,10 @@ import java.io.Serializable;
  */
 public class GroupMessage implements Serializable{
     byte[] buffer;
-    GroupMember creador;
+    GroupMember creator;
     
-    public GroupMessage(byte[] buffer, GroupMember creador){
+    public GroupMessage(byte[] buffer, GroupMember creator){
         this.buffer = buffer;
-        this.creador = creador;
+        this.creator = creator;
     }
 }

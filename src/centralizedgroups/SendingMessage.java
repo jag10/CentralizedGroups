@@ -30,9 +30,9 @@ public class SendingMessage extends Thread {
         for (int i = 0; i < grupo.listaMiembros.size(); i++) {
             if (!grupo.listaMiembros.get(i).alias.equals(this.emisor.alias)) {
                 try {
-                    //Busco el registro del host de los receptores, en el puerto que estén usando
+                    //Look for the receivers registry
                     Registry registry = LocateRegistry.getRegistry(grupo.listaMiembros.get(i).hostname, 
-                            grupo.listaMiembros.get(i).puerto);
+                            grupo.listaMiembros.get(i).port);
                     
                     ClientInterface stub = (ClientInterface) registry.lookup(grupo.listaMiembros.get(i).alias);
                     GroupMessage mensaje = new GroupMessage(this.men, this.emisor);

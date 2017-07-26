@@ -14,14 +14,14 @@ import java.util.concurrent.locks.ReentrantLock;
 //http://docs.oracle.com/javase/tutorial/rmi/server.html
 public class GroupServer extends UnicastRemoteObject implements GroupServerInterface {
 
-    ArrayList<ObjectGroup> listaGrupos;
-    int identificador;
-    ReentrantLock lock;
+    private ArrayList<ObjectGroup> groupList;
+    private int id;
+    private ReentrantLock lock;
 
     public GroupServer() throws RemoteException {
         super();
-        listaGrupos = new ArrayList<ObjectGroup>();
-        identificador = 0;
+        groupList = new ArrayList<ObjectGroup>();
+        id = 0;
         this.lock = new ReentrantLock();
     }
 
@@ -30,14 +30,14 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
         int h = -1;
         lock.lock();
         try {
-            for (int i = 0; i < listaGrupos.size(); i++) {
-                if (!listaGrupos.isEmpty() && listaGrupos.get(i).galias.equals(galias)) {
+            for (int i = 0; i < groupList.size(); i++) {
+                if (!groupList.isEmpty() && groupList.get(i).galias.equals(galias)) {
                     return -1;
                 }
             }
-            ObjectGroup g = new ObjectGroup(galias, identificador, oalias, ohostname, puerto);
-            listaGrupos.add(g);
-            identificador++;
+            ObjectGroup g = new ObjectGroup(galias, id, oalias, ohostname, puerto);
+            groupList.add(g);
+            id++;
             h = g.gid;
         } finally {
             lock.unlock();
@@ -49,8 +49,8 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     public int findGroup(String galias) throws RemoteException {
         lock.lock();
         try {
-            for (int i = 0; i < listaGrupos.size(); i++) {
-                if (!listaGrupos.isEmpty() && listaGrupos.get(i).galias.equals(galias)) {
+            for (int i = 0; i < groupList.size(); i++) {
+                if (!groupList.isEmpty() && groupList.get(i).galias.equals(galias)) {
                     return i;
                 }
             }
@@ -63,10 +63,10 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     @Override
     public boolean removeGroup(String galias, String oalias) throws RemoteException {
         lock.lock();
-        for (int i = 0; i < listaGrupos.size(); i++) {
-            if (!listaGrupos.isEmpty() && listaGrupos.get(i).galias.equals(galias) && listaGrupos.get(i).oalias.equals(oalias)) {
+        for (int i = 0; i < groupList.size(); i++) {
+            if (!groupList.isEmpty() && groupList.get(i).galias.equals(galias) && groupList.get(i).oalias.equals(oalias)) {
                 lock.unlock();
-                listaGrupos.remove(i);
+                groupList.remove(i);
                 return true;
             }
         }
@@ -77,10 +77,10 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     @Override
     public boolean removeGroup(int gid, String oalias) throws RemoteException {
         lock.lock();
-        for (int i = 0; i < listaGrupos.size(); i++) {
-            if (!listaGrupos.isEmpty() && listaGrupos.get(i).gid == gid && listaGrupos.get(i).oalias.equals(oalias)) {
+        for (int i = 0; i < groupList.size(); i++) {
+            if (!groupList.isEmpty() && groupList.get(i).gid == gid && groupList.get(i).oalias.equals(oalias)) {
                 lock.unlock();
-                listaGrupos.remove(i);
+                groupList.remove(i);
                 return true;
             }
         }
@@ -91,10 +91,10 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     @Override
     public GroupMember addMember(int gid, String alias, String hostname, int puerto) throws RemoteException {
         lock.lock();
-        for (int i = 0; i < listaGrupos.size(); i++) {
-            if (!listaGrupos.isEmpty() && listaGrupos.get(i).gid == gid && listaGrupos.get(i).isMember(alias) == null) {
+        for (int i = 0; i < groupList.size(); i++) {
+            if (!groupList.isEmpty() && groupList.get(i).gid == gid && groupList.get(i).isMember(alias) == null) {
                 lock.unlock();
-                return listaGrupos.get(i).addMember(alias, hostname, puerto);
+                return groupList.get(i).addMember(alias, hostname, puerto);
             }
         }
         lock.unlock();
@@ -104,11 +104,11 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     @Override
     public boolean removeMember(int gid, String alias) throws RemoteException {
         lock.lock();
-        for (int i = 0; i < listaGrupos.size(); i++) {
-            if (!listaGrupos.isEmpty() && listaGrupos.get(i).gid == gid && listaGrupos.get(i).isMember(alias) != null
-                    && !listaGrupos.get(i).oalias.equals(alias)) {
+        for (int i = 0; i < groupList.size(); i++) {
+            if (!groupList.isEmpty() && groupList.get(i).gid == gid && groupList.get(i).isMember(alias) != null
+                    && !groupList.get(i).oalias.equals(alias)) {
                 lock.unlock();
-                return listaGrupos.get(i).removeMember(alias);
+                return groupList.get(i).removeMember(alias);
             }
         }
         lock.unlock();
@@ -120,11 +120,11 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
         lock.lock();
         int i;
         try {
-            for (i = 0; i < listaGrupos.size(); i++) {
-                if (!listaGrupos.isEmpty() && listaGrupos.get(i).gid == gid) {
-                    for (int j = 0; j < listaGrupos.get(i).listaMiembros.size(); j++) {
-                        if (listaGrupos.get(i).listaMiembros.get(j).alias.equals(alias)) {
-                            return listaGrupos.get(i).listaMiembros.get(j);
+            for (i = 0; i < groupList.size(); i++) {
+                if (!groupList.isEmpty() && groupList.get(i).gid == gid) {
+                    for (int j = 0; j < groupList.get(i).listaMiembros.size(); j++) {
+                        if (groupList.get(i).listaMiembros.get(j).alias.equals(alias)) {
+                            return groupList.get(i).listaMiembros.get(j);
                         }
                     }
                 }
@@ -139,10 +139,10 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
 //    public boolean StopMembers(int gid) throws RemoteException {
 //        lock.lock();
 //        int i;
-//        for (i = 0; i < listaGrupos.size(); i++) {
-//            if (!listaGrupos.isEmpty() && listaGrupos.get(i).gid == gid) {
+//        for (i = 0; i < groupList.size(); i++) {
+//            if (!groupList.isEmpty() && groupList.get(i).gid == gid) {
 //                lock.unlock();
-//                listaGrupos.get(i).StopMembers();
+//                groupList.get(i).StopMembers();
 //                return true;
 //            }
 //        }
@@ -154,10 +154,10 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
 //    public boolean AllowMembers(int gid) throws RemoteException {
 //        lock.lock();
 //        int i;
-//        for (i = 0; i < listaGrupos.size(); i++) {
-//            if (!listaGrupos.isEmpty() && listaGrupos.get(i).gid == gid) {
+//        for (i = 0; i < groupList.size(); i++) {
+//            if (!groupList.isEmpty() && groupList.get(i).gid == gid) {
 //                lock.unlock();
-//                listaGrupos.get(i).AllowMembers();
+//                groupList.get(i).AllowMembers();
 //                return true;
 //            }
 //        }
@@ -168,10 +168,10 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     public boolean sendGroupMessage(GroupMember gm, byte[] msg) throws RemoteException {
         lock.lock();
         try {
-            for (int i = 0; i < listaGrupos.size(); i++) {
-                if (listaGrupos.get(i).gid == gm.gid) {
-                    listaGrupos.get(i).Sending();
-                    SendingMessage h = new SendingMessage(listaGrupos.get(i), gm, msg);
+            for (int i = 0; i < groupList.size(); i++) {
+                if (groupList.get(i).gid == gm.gid) {
+                    groupList.get(i).Sending();
+                    SendingMessage h = new SendingMessage(groupList.get(i), gm, msg);
                     h.start();
                     break;
                 }
@@ -200,7 +200,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
             GroupServer obj = new GroupServer();
             reg.rebind("GroupServer", obj);
 
-            System.out.println("Servidor listo");
+            System.out.println("Server ready");
         } catch (RemoteException ex) {
             System.err.println("Server exception: " + ex.toString());
         }

@@ -14,9 +14,10 @@ public class ObjectGroup {
 
     ReentrantLock lock;
     String galias, oalias, ohostname;
-    int gid, contador = 1, mensajes = 0;
-    Condition bloqueo;
-    boolean bloquear = false;
+    int gid;
+    private int groupMembers = 1, messages = 0;
+    private Condition bloqueo;
+    private boolean bloquear = false;
     ArrayList<GroupMember> listaMiembros = new ArrayList<>();
 
     public ObjectGroup(String galias, int gid, String oalias, String ohostname, int puerto) {
@@ -54,9 +55,9 @@ public class ObjectGroup {
                     Logger.getLogger(ObjectGroup.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            GroupMember temp = new GroupMember(alias, hostname, contador, this.gid, puerto);
+            GroupMember temp = new GroupMember(alias, hostname, groupMembers, this.gid, puerto);
             if (isMember(alias) == null) {
-                contador++;
+                groupMembers++;
                 listaMiembros.add(temp);
                 return temp;
             }
@@ -113,7 +114,7 @@ public class ObjectGroup {
         lock.lock();
         try {
             bloquear = true;
-            mensajes++;
+            messages++;
         } finally {
             lock.unlock();
         }
@@ -123,7 +124,7 @@ public class ObjectGroup {
         lock.lock();
         try {
             bloquear = false;
-            mensajes--;
+            messages--;
         } finally {
             lock.unlock();
         }
